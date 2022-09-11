@@ -26,7 +26,7 @@ jobs:
 
             - name: Read compose file
               run: |
-                  COMPOSE_CONFIG="$(cat docker-compose.yml; printf a)"
+                  COMPOSE_CONFIG="$(cat docker-compose.yml; printf a)" # with hack for break lines
                   COMPOSE_CONFIG="${COMPOSE_CONFIG%a}"
 
             - name: deploy to docker-compose.yml
@@ -40,4 +40,5 @@ jobs:
                   script: |
                       mkdir -p ${{ secrets.APP_NAME }}
                       cd ${{ secrets.APP_NAME }}
-                      printf "$COMPOSE_CONFIG" > test.yml
+                      printf "$COMPOSE_CONFIG" > docker-compose.yml
+                      docker-compose pull && docker-compose up -d

@@ -2,13 +2,17 @@
 
 Simple way deploy startup.
 
-## Github secret envs
+## Usage
 
--   SSH_PRIVATE_KEY (ssh key for entering to server)
--   HOST (docker registry host)
--   USERNAME (ssh username)
--   APP_NAME (folder on remote host)
--   PROJECT_NAME (project name)
+Setup github secrets (envs):
+
+-   `SSH_PRIVATE_KEY` ssh key for entering to server
+-   `HOST` docker registry host
+-   `USERNAME` ssh username
+-   `APP_NAME` folder on remote host
+-   `PROJECT_NAME` project name
+
+Change in docker-compose `project/app` and other stuff on yours
 
 Image will be name by `PROJECT_NAME/APP_NAME`, full tagname: `HOST:5000/PROJECT_NAME/APP_NAME`
 
