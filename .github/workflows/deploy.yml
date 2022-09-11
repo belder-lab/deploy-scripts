@@ -11,6 +11,18 @@ jobs:
         steps:
             - uses: actions/checkout@v2
 
+            - name: Set insecure registry
+              run: |
+                  echo "{ \"insecure-registries\": [\"${{ secrets.HOST }}:5000\"] }" | sudo tee /etc/docker/daemon.json
+                  sudo service docker restart
+
+            - name: Login to Docker Registry
+              uses: docker/login-action@v1
+              with:
+                  registry: ${{ secrets.HOST }}:5000
+                  username: ${{ secrets.REGISTRY_USERNAME }}
+                  password: ${{ secrets.REGISTRY_TOKEN }}
+
             - name: Build docker image
               run: docker build -t ${{ secrets.HOST }}:5000/${{secrets.PROJECT_NAME}}/${{ secrets.APP_NAME }} .
 
