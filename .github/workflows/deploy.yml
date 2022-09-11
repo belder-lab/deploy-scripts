@@ -19,10 +19,10 @@ jobs:
                   known_hosts: unnecessary
 
             - name: Build docker image
-              run: docker build -t ${{ secrets.HOST }}:5000/{{secrets.PROJECT_NAME}}/{{ secrets.APP_NAME }} .
+              run: docker build -t ${{ secrets.HOST }}:5000/${{secrets.PROJECT_NAME}}/${{ secrets.APP_NAME }} .
 
             - name: Push image
-              run: docker push ${{ secrets.HOST }}:5000/{{secrets.PROJECT_NAME}}/{{ secrets.APP_NAME }}
+              run: docker push ${{ secrets.HOST }}:5000/${{secrets.PROJECT_NAME}}/${{ secrets.APP_NAME }}
 
             - name: Read compose file
               run: |
@@ -33,12 +33,13 @@ jobs:
               uses: appleboy/ssh-action@master
               env:
                   COMPOSE_CONFIG: $COMPOSE_CONFIG
+                  APP_NAME: ${{ secrets.APP_NAME }}
               with:
                   host: ${{ secrets.HOST }}
                   username: ${{ secrets.USERNAME }}
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
                   script: |
-                      mkdir -p ${{ secrets.APP_NAME }}
-                      cd ${{ secrets.APP_NAME }}
+                      mkdir -p $APP_NAME
+                      cd $APP_NAME
                       printf "$COMPOSE_CONFIG" > docker-compose.yml
                       docker-compose pull && docker-compose up -d
