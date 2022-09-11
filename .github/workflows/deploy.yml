@@ -41,6 +41,8 @@ jobs:
                   APP_NAME: ${{ secrets.APP_NAME }}
               with:
                   host: ${{ secrets.HOST }}
+                  envs: COMPOSE_CONFIG,APP_NAME
+                  script_stop: true
                   username: ${{ secrets.USERNAME }}
                   key: ${{ secrets.SSH_PRIVATE_KEY }}
                   script: |
