@@ -11,13 +11,6 @@ jobs:
         steps:
             - uses: actions/checkout@v2
 
-            - name: Install SSH Key
-              uses: shimataro/ssh-key-action@v2
-              with:
-                  key: ${{ secrets.SSH_PRIVATE_KEY }}
-                  name: id_ed25519
-                  known_hosts: unnecessary
-
             - name: Build docker image
               run: docker build -t ${{ secrets.HOST }}:5000/${{secrets.PROJECT_NAME}}/${{ secrets.APP_NAME }} .
 
