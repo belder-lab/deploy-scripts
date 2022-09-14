@@ -14,6 +14,7 @@ Setup github secrets (envs):
 -   `SSH_PRIVATE_KEY` ssh key for entering to server
 -   `HOST` docker registry and application host
 -   `USERNAME` ssh username
+-   `KNOW_HOSTS` for ssh know host (value generate by `ssh-keyscan XXX.XXX.XXX.XXX`)
 -   `APP_NAME` folder on remote host
 -   `PROJECT_NAME` project name
 -   `REGISTRY_USERNAME` username for registry
@@ -30,9 +31,7 @@ When some change pushed in repo, github actions run `deploy.yml` script, which d
 1. Login to docker registry (how to run [registry]](https://github.com/fastup-kit/registry))
 2. Build docker image
 3. Pushing image to to docker registry
-4. Entering to host
-5. Copy docker-compose.yml from repo (can be rewrite by k8s config)
+4. Copy docker-compose.yml from repo to host (can be rewrite by k8s config)
+5. Entering to host
 6. Pulling image from registry
 7. Starting docker container
-8. ...
-9. PROFIT

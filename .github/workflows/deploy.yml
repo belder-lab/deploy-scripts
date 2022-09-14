@@ -11,6 +11,14 @@ jobs:
         steps:
             - uses: actions/checkout@v2
 
+            - name: Install SSH Key
+              uses: shimataro/ssh-key-action@v2
+              with:
+                  key: ${{ secrets.SSH_PRIVATE_KEY }}
+                  name: id_ed25519
+                  known_hosts: ${{ secrets.KNOW_HOSTS }}
+
+            # Delete me, if you have ssl for this host
             - name: Set insecure registry
               run: |
                   echo "{ \"insecure-registries\": [\"${{ secrets.HOST }}:5000\"] }" | sudo tee /etc/docker/daemon.json
@@ -23,30 +31,17 @@ jobs:
                   username: ${{ secrets.REGISTRY_USERNAME }}
                   password: ${{ secrets.REGISTRY_TOKEN }}
 
+            - name: Create .env file
+              run: echo AIRTABLE_KEY=${{ secrets.AIRTABLE_KEY }} > .env
+
             - name: Build docker image
               run: docker build -t ${{ secrets.HOST }}:5000/${{secrets.PROJECT_NAME}}/${{ secrets.APP_NAME }} .
 
             - name: Push image
               run: docker push ${{ secrets.HOST }}:5000/${{secrets.PROJECT_NAME}}/${{ secrets.APP_NAME }}
 
-            - name: Read compose file
-              run: |
-                  COMPOSE_CONFIG="$(cat docker-compose.yml; printf a)" # with hack for break lines
-                  COMPOSE_CONFIG="${COMPOSE_CONFIG%a}"
+            - name: Copy docker-compose file to remote
+              run: scp ./docker-compose.yml ${{ secrets.USERNAME }}@${{ secrets.HOST }}:~/${{ secrets.APP_NAME }}/
 
-            - name: deploy to docker-compose.yml
-              uses: appleboy/ssh-action@master
-              env:
-                  COMPOSE_CONFIG: $COMPOSE_CONFIG
-                  APP_NAME: ${{ secrets.APP_NAME }}
-              with:
-                  host: ${{ secrets.HOST }}
-                  envs: COMPOSE_CONFIG,APP_NAME
-                  script_stop: true
-                  username: ${{ secrets.USERNAME }}
-                  key: ${{ secrets.SSH_PRIVATE_KEY }}
-                  script: |
-                      mkdir -p $APP_NAME
-                      cd $APP_NAME
-                      printf "$COMPOSE_CONFIG" > docker-compose.yml
-                      docker-compose pull && docker-compose up -d
+            - name: Restart application
+              run: ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd ${{secrets.PROJECT_NAME}} && docker-compose pull && docker-compose up -d'
