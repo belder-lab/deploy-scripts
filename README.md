@@ -28,7 +28,7 @@ Image will be name by `PROJECT_NAME/APP_NAME`, full tagname: `HOST:5000/PROJECT_
 
 When some change pushed in repo, github actions run `deploy.yml` script, which do:
 
-1. Login to docker registry (how to run [registry]](https://github.com/fastup-kit/registry))
+1. Login to docker registry (how to run [registry](https://github.com/fastup-kit/registry))
 2. Build docker image
 3. Pushing image to to docker registry
 4. Copy docker-compose.yml from repo to host (can be rewrite by k8s config)
