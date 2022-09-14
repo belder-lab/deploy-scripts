@@ -44,4 +44,4 @@ jobs:
               run: scp ./docker-compose.yml ${{ secrets.USERNAME }}@${{ secrets.HOST }}:~/${{ secrets.APP_NAME }}/
 
             - name: Restart application
-              run: ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd ${{secrets.PROJECT_NAME}} && docker-compose pull && docker-compose up -d'
+              run: ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd ${{secrets.APP_NAME}} && docker-compose pull && docker-compose up -d'
