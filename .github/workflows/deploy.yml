@@ -41,7 +41,7 @@ jobs:
               run: docker push ${{ secrets.HOST }}:5000/${{secrets.PROJECT_NAME}}/${{ secrets.APP_NAME }}
 
             - name: Copy docker-compose file to remote
-              run: scp ./docker-compose.yml ${{ secrets.USERNAME }}@${{ secrets.HOST }}:~/${{ secrets.APP_NAME }}/
+              run: rsync -r -e ssh ./docker-compose.yml ${{ secrets.USERNAME }}@${{ secrets.HOST }}:~/${{ secrets.APP_NAME }}/
 
             - name: Restart application
               run: ssh ${{ secrets.USERNAME }}@${{ secrets.HOST }} 'cd ${{secrets.APP_NAME}} && docker-compose pull && docker-compose up -d'
